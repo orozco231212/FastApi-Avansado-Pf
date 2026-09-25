@@ -32,12 +32,12 @@ async def request_middleware(request: Request, call_next: RequestResponseEndpoin
     response.headers["Referrer-Policy"] = "no-referrer"
 
     logger.info(
-        "request method=%s path=%s status=%s duration=%.4f request_id=%s client=%s",
+        "peticion metodo=%s ruta=%s estado=%s duracion=%.4fs id_peticion=%s cliente=%s",
         request.method,
         request.url.path,
         response.status_code,
         process_time,
         request_id,
-        request.client.host if request.client else "unknown",
+        request.client.host if request.client else "desconocido",
     )
     return response

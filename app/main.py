@@ -5,10 +5,10 @@ import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from slowapi import _rate_limit_exceeded_handler
-from slowapi.errors import RateLimitExceeded
 
 from app.auth.auth_routes import router as auth_router
+from app.docs.swagger_es import registrar_docs_en_espanol
+from app.errors.handlers import registrar_manejadores_en_espanol
 from app.middlewares.rate_limiter import limiter
 from app.middlewares.request_middleware import request_middleware
 from app.routes.device_routes import router as device_router
@@ -40,6 +40,7 @@ app = FastAPI(
     openapi_tags=TAGS_METADATA,
     contact={"name": "device_systems - SENA", "url": "https://github.com/orozco231212/FastApi-Avansado-Pf"},
     license_info={"name": "MIT"},
+    docs_url=None,  # la documentación se registra más abajo, traducida al español
 )
 
 allowed_origins = [
@@ -56,8 +57,9 @@ app.add_middleware(
 )
 
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+registrar_manejadores_en_espanol(app)
 app.middleware("http")(request_middleware)
+registrar_docs_en_espanol(app)
 
 app.include_router(auth_router)
 app.include_router(user_router)

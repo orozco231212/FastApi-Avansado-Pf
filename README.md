@@ -49,6 +49,11 @@ device_systems/
 |   |   |-- auth_routes.py             # POST /auth/register, POST /auth/login, GET /auth/me
 |   |   |-- auth_service.py            # Registro y autenticación de credenciales
 |   |   `-- security.py                # Hash passlib + creación/validación de JWT
+|   |-- docs/
+|   |   `-- swagger_es.py              # Traducción al español de la interfaz de /docs
+|   |-- errors/
+|   |   |-- handlers.py                # Errores 401, 404, 422 y 429 con mensajes en español
+|   |   `-- mensajes_es.py             # Diccionarios de traducción de mensajes
 |   |-- database/
 |   |   `-- connection.py              # Engine, SessionLocal y Base de SQLAlchemy
 |   |-- models/                        # user_model.py, device_model.py, loan_model.py
@@ -190,6 +195,27 @@ La migración `a2c51e9d043b_add_authentication_fields_to_users.py` agrega `users
 (`String(255)`, obligatorio); la tabla `users` queda como
 `id, name, email, role, is_active, created_at, hashed_password`.
 
+## Idioma de la API y de la documentación
+
+Todo el texto que ve un cliente de la API está en español:
+
+- **Mensajes de error**: `app/errors/handlers.py` y `app/errors/mensajes_es.py` traducen los mensajes
+  que FastAPI, Pydantic y slowapi generan en inglés. Por ejemplo, un `401` responde
+  `{"detail": "No autenticado: envía el token en la cabecera 'Authorization: Bearer <token>'"}` y un `422`
+  responde `{"detail": "Los datos enviados no son válidos", "errores": [{"campo": "password", "mensaje": "Debe tener al menos 8 caracteres"}]}`.
+- **Interfaz de Swagger UI (`/docs`)**: Swagger UI es una librería de terceros publicada solo en inglés
+  (no ofrece opciones de idioma). `app/docs/swagger_es.py` sirve la página `/docs` con una capa de traducción
+  que cambia las etiquetas de la interfaz —incluido el diálogo **Authorize → Autorizar**— y respeta los
+  bloques de código y los ejemplos, que nunca se traducen para no alterar los nombres reales del contrato.
+- **Títulos, descripciones, `summary` y `response_description`** de todos los endpoints y schemas están redactados en español.
+- **README, `.env.example`, comentarios y docstrings** están en español.
+
+Se mantienen en inglés, por convención técnica, los **identificadores de código** (clases como `UserRegister`
+o `LoanDetailResponse`, funciones como `get_password_hash` o `require_admin`, tablas y columnas como `users`
+o `hashed_password`), porque la guía de la actividad los define así y hacen parte del contrato de la API;
+también permanecen en inglés las frases estándar de los códigos HTTP y la interfaz de ReDoc (`/redoc`),
+que tampoco permite traducción.
+
 ## Endpoints
 
 ### Autenticación (`Auth`)
@@ -326,13 +352,13 @@ python -m scripts.create_admin admin2@sena.edu.co OtraClaveSegura123 "Admin Dos"
 | 19 | Swagger `POST /auth/register` → *Try it out* con `{"name":"Ana Torres","email":"aprendiz@sena.edu.co","password":"ClaveSegura123"}` → respuesta `201` |
 | 20 | Swagger **Authorize** con `aprendiz@sena.edu.co` / `ClaveSegura123`, o `POST /auth/login`; captura el `access_token` y `token_type: bearer` |
 | 21 | Swagger `GET /auth/me` con el token autorizado → respuesta `200` sin `hashed_password` |
-| 22 | `curl.exe -s -o NUL -w "%{http_code}`n" http://127.0.0.1:8000/users` → `401` |
+| 22 | `curl.exe -s -i http://127.0.0.1:8000/users` → `401` con `{"detail":"No autenticado: envía el token en la cabecera 'Authorization: Bearer <token>'"}` |
 | 23 | Autoriza Swagger con el token del rol `user` y ejecuta `DELETE /devices/1` → `403 Forbidden` |
 | 24 | `curl.exe -s -D - -o NUL http://127.0.0.1:8000/` → muestra `X-App-Name`, `X-Process-Time` y `X-Request-ID` |
 | 25 | `1..6 \| % { curl.exe -s -o NUL -w "%{http_code}`n" -X POST http://127.0.0.1:8000/auth/login -d "username=aprendiz@sena.edu.co&password=Mal123" }` → cinco `401` y un `429` |
 | 26 | `python -c "import sqlite3; print(list(sqlite3.connect('device_systems.db').execute('select id, email, hashed_password from users')))"` |
 | 27 | `curl.exe -s -D - -o NUL -X OPTIONS http://127.0.0.1:8000/users -H "Origin: http://localhost:5173" -H "Access-Control-Request-Method: GET"` |
-| 28 | Terminal: `pytest -q` con las 16 pruebas en verde |
+| 28 | Terminal: `pytest -q` con las 17 pruebas en verde y sus nombres en español |
 
 > Importante: cada captura debe mostrar el comando o endpoint usado y su respuesta con el código HTTP visible.
 
@@ -359,6 +385,7 @@ Escenarios cubiertos por la suite (`tests/`):
 13. Rate limiting en `/auth/register` y `/auth/login` (`429` + `Retry-After`).
 14. CRUD de usuarios, filtros, préstamos, joins y devoluciones de la actividad anterior.
 15. Endpoint `/security/policy` con la política de seguridad vigente.
+16. Mensajes de error y de validación en español (`401`, `404` y `422`).
 
 ## Migraciones
 

@@ -8,17 +8,26 @@ from app.auth.security import decode_access_token
 from app.dependencies.database_dependency import get_db
 from app.models.user_model import User
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login", auto_error=False)
 DbSession = Annotated[Session, Depends(get_db)]
+SIN_TOKEN = "No autenticado: envía el token en la cabecera 'Authorization: Bearer <token>'"
 
 
-def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: DbSession) -> User:
+def get_current_user(token: Annotated[str | None, Depends(oauth2_scheme)], db: DbSession) -> User:
+    """Obtiene el usuario dueño del token JWT o responde 401 en español."""
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=SIN_TOKEN,
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     payload = decode_access_token(token)
     subject = payload.get("sub") if payload else None
     if not subject:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Credenciales inválidas",
+            detail="Token inválido o expirado",
             headers={"WWW-Authenticate": "Bearer"},
         )
     try:
@@ -26,17 +35,19 @@ def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], db: DbSessio
     except (TypeError, ValueError) as error:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Credenciales inválidas",
+            detail="Token inválido: no contiene un usuario válido",
             headers={"WWW-Authenticate": "Bearer"},
         ) from error
+
     user = db.get(User, user_id)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Credenciales inválidas",
+            detail="El usuario del token ya no existe",
             headers={"WWW-Authenticate": "Bearer"},
         )
     return user
+
 
 
 def get_current_active_user(current_user: Annotated[User, Depends(get_current_user)]) -> User:

@@ -1,6 +1,7 @@
 from sqlalchemy import Select, select
 from sqlalchemy.orm import Session
 
+from app.auth.security import get_password_hash
 from app.models.user_model import User
 from app.schemas.user_schema import UserCreate, UserPatch, UserUpdate
 
@@ -10,7 +11,8 @@ def create_user(db: Session, user_data: UserCreate) -> User:
     if existing_user:
         raise ValueError("El email ya está registrado")
 
-    user = User(**user_data.model_dump())
+    user_values = user_data.model_dump(exclude={"password"})
+    user = User(**user_values, hashed_password=get_password_hash(user_data.password))
     db.add(user)
     db.commit()
     db.refresh(user)

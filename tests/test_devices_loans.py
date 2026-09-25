@@ -2,7 +2,13 @@ from fastapi.testclient import TestClient
 
 
 def user_payload(email: str = "aprendiz@example.com") -> dict[str, object]:
-    return {"name": "Ana Torres", "email": email, "role": "user", "is_active": True}
+    return {
+        "name": "Ana Torres",
+        "email": email,
+        "role": "user",
+        "is_active": True,
+        "password": "UserPass123",
+    }
 
 
 def device_payload(serial_number: str = "LEN-001") -> dict[str, str]:

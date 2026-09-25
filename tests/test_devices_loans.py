@@ -1,7 +1,9 @@
+"""Pruebas funcionales de dispositivos, préstamos y consultas con joins."""
+
 from fastapi.testclient import TestClient
 
 
-def user_payload(email: str = "aprendiz@example.com") -> dict[str, object]:
+def datos_de_usuario(email: str = "aprendiz@example.com") -> dict[str, object]:
     return {
         "name": "Ana Torres",
         "email": email,
@@ -11,28 +13,28 @@ def user_payload(email: str = "aprendiz@example.com") -> dict[str, object]:
     }
 
 
-def device_payload(serial_number: str = "LEN-001") -> dict[str, str]:
+def datos_de_dispositivo(serial: str = "LEN-001") -> dict[str, str]:
     return {
         "name": "ThinkPad T14",
-        "serial_number": serial_number,
+        "serial_number": serial,
         "device_type": "laptop",
         "brand": "Lenovo",
     }
 
 
-def test_loan_lifecycle_and_join_filters(client: TestClient) -> None:
-    user = client.post("/users", json=user_payload()).json()
-    device = client.post("/devices", json=device_payload()).json()
-    loan = client.post("/loans", json={"user_id": user["id"], "device_id": device["id"]})
+def test_ciclo_del_prestamo_y_filtros_con_joins(client: TestClient) -> None:
+    usuario = client.post("/users", json=datos_de_usuario()).json()
+    dispositivo = client.post("/devices", json=datos_de_dispositivo()).json()
+    prestamo = client.post("/loans", json={"user_id": usuario["id"], "device_id": dispositivo["id"]})
 
-    assert loan.status_code == 201
-    assert client.get("/devices?is_available=false").json()[0]["id"] == device["id"]
-    assert client.post("/loans", json={"user_id": user["id"], "device_id": device["id"]}).status_code == 409
-    assert client.get("/loans?status=active&device_type=laptop").json()[0]["user"]["email"] == user["email"]
-    assert client.get(f"/users/{user['id']}/loans").status_code == 200
-    assert client.get(f"/devices/{device['id']}/loans").status_code == 200
+    assert prestamo.status_code == 201
+    assert client.get("/devices?is_available=false").json()[0]["id"] == dispositivo["id"]
+    assert client.post("/loans", json={"user_id": usuario["id"], "device_id": dispositivo["id"]}).status_code == 409
+    assert client.get("/loans?status=active&device_type=laptop").json()[0]["user"]["email"] == usuario["email"]
+    assert client.get(f"/users/{usuario['id']}/loans").status_code == 200
+    assert client.get(f"/devices/{dispositivo['id']}/loans").status_code == 200
 
-    loan_id = loan.json()["id"]
-    assert client.patch(f"/loans/{loan_id}/return").status_code == 200
-    assert client.get(f"/devices/{device['id']}").json()["is_available"] is True
-    assert client.patch(f"/loans/{loan_id}/return").status_code == 409
+    identificador = prestamo.json()["id"]
+    assert client.patch(f"/loans/{identificador}/return").status_code == 200
+    assert client.get(f"/devices/{dispositivo['id']}").json()["is_available"] is True
+    assert client.patch(f"/loans/{identificador}/return").status_code == 409

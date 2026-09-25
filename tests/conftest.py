@@ -36,7 +36,7 @@ def client() -> Generator[TestClient, None, None]:
     app.dependency_overrides[get_db] = override_get_db
     db = TestingSessionLocal()
     admin = User(
-        name="Test Admin",
+        name="Admin de Pruebas",
         email="admin@example.com",
         hashed_password=get_password_hash("AdminPass123"),
         role="admin",

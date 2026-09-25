@@ -92,6 +92,57 @@ Roles permitidos: `admin`, `support` y `user`. El nombre requiere mínimo 3 cara
 
 `User` es el modelo SQLAlchemy que representa la tabla `users` y sus constraints en SQLite. `UserCreate`, `UserUpdate`, `UserPatch` y `UserResponse` son schemas Pydantic: validan los datos que entran y controlan la forma de los datos que salen de la API. Separarlos evita exponer directamente la estructura de persistencia.
 
+## Evidencias de captura para la entrega
+
+La carpeta [captures](captures) guarda la evidencia final del proyecto. Aquí están las imágenes ya organizadas con los nombres definitivos para la entrega.
+
+### Capturas principales
+
+- [captures/01_alembic_init.png](captures/01_alembic_init.png) - Captura de la inicialización de Alembic.
+- [captures/02_alembic_revision_autogenerate.png](captures/02_alembic_revision_autogenerate.png) - Generación de la migración.
+- [captures/03_alembic_upgrade_head.png](captures/03_alembic_upgrade_head.png) - Aplicación de la migración.
+- [captures/04_alembic_history.png](captures/04_alembic_history.png) - Historial de Alembic.
+- [captures/05_swagger_docs.png](captures/05_swagger_docs.png) - Swagger UI del proyecto.
+- [captures/06_redoc.png](captures/06_redoc.png) - Documentación ReDoc.
+- [captures/07_crear_usuario.png](captures/07_crear_usuario.png) - Creación de usuario.
+- [captures/08_crear_dispositivo.png](captures/08_crear_dispositivo.png) - Creación de dispositivo.
+- [captures/09_crear_prestamo.png](captures/09_crear_prestamo.png) - Creación de préstamo.
+- [captures/10_listar_prestamos_join.png](captures/10_listar_prestamos_join.png) - Consulta con joins.
+- [captures/11_filtro_estado.png](captures/11_filtro_estado.png) - Filtro por estado.
+- [captures/12_filtro_tipo_dispositivo.png](captures/12_filtro_tipo_dispositivo.png) - Filtro por tipo de dispositivo.
+- [captures/13_prestamos_usuario.png](captures/13_prestamos_usuario.png) - Historial de préstamos del usuario.
+- [captures/14_devolucion_dispositivo.png](captures/14_devolucion_dispositivo.png) - Devolución del préstamo.
+- [captures/15_dispositivo_disponible.png](captures/15_dispositivo_disponible.png) - Verificación de disponibilidad del dispositivo.
+- [captures/api_evidence.json](captures/api_evidence.json) - Evidencia JSON de la API con resultados reales.
+
+### Orden recomendado para la presentación
+
+1. `01_alembic_init.png`
+2. `02_alembic_revision_autogenerate.png`
+3. `03_alembic_upgrade_head.png`
+4. `04_alembic_history.png`
+5. `05_swagger_docs.png`
+6. `06_redoc.png`
+7. `07_crear_usuario.png`
+8. `08_crear_dispositivo.png`
+9. `09_crear_prestamo.png`
+10. `10_listar_prestamos_join.png`
+11. `11_filtro_estado.png`
+12. `12_filtro_tipo_dispositivo.png`
+13. `13_prestamos_usuario.png`
+14. `14_devolucion_dispositivo.png`
+15. `15_dispositivo_disponible.png`
+
+### Cómo tomar cada captura
+
+- Abre la terminal y ejecuta el comando correspondiente.
+- Toma la pantalla completa de la ventana de PowerShell o terminal.
+- Para Swagger y ReDoc, abre la ruta en el navegador y captura la vista completa.
+- Para las peticiones de la API, usa Swagger UI y toma la respuesta con el código HTTP visible.
+- Guarda cada imagen en la carpeta [captures](captures) con el nombre indicado arriba.
+
+> Importante: la evidencia final debe mostrar claramente el comando ejecutado o el endpoint validado, con su respuesta correspondiente.
+
 ## Pruebas
 
 ```powershell

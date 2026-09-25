@@ -68,6 +68,7 @@ device_systems/
 |   `-- versions/                      # 0001_initial, eaf5bb584fec, 6f13097d5c18,
 |                                      # a2c51e9d043b (campos de autenticación)
 |-- tests/                             # test_users.py, test_devices_loans.py, test_security.py
+|-- scripts/create_admin.py            # Bootstrap del usuario admin para pruebas
 |-- captures/                          # Evidencias en imágenes
 |-- alembic.ini
 |-- requirements.txt
@@ -306,7 +307,13 @@ uvicorn app.main:app --reload
 Crear un usuario administrador inicial (bootstrap) para poder grabar dispositivos y usuarios:
 
 ```powershell
-python -c "from app.database.connection import SessionLocal; from app.auth.security import get_password_hash; from app.models.user_model import User; db = SessionLocal(); db.add(User(name='Admin SENA', email='admin@sena.edu.co', hashed_password=get_password_hash('AdminSeguro123'), role='admin', is_active=True)); db.commit(); print('admin creado')"
+python -m scripts.create_admin
+```
+
+Crea `admin@sena.edu.co` / `AdminSeguro123` con rol `admin`. Se pueden pasar otros datos:
+
+```powershell
+python -m scripts.create_admin admin2@sena.edu.co OtraClaveSegura123 "Admin Dos"
 ```
 
 ### Cómo tomar cada captura de la parte 2

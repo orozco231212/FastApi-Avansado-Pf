@@ -283,44 +283,131 @@ nunca se exponga.
 
 ## Evidencias de captura para la entrega
 
-La carpeta [captures](captures) guarda la evidencia del proyecto. Las evidencias de la actividad anterior
-(estructura, migraciones, CRUD y joins) se conservan; las nuevas evidencias de seguridad van del `16` al `28`.
+La carpeta [captures](captures) guarda la evidencia del proyecto y **todas las imágenes se muestran aquí abajo**
+(no hace falta abrir ningún enlace). Las evidencias de la actividad anterior van del `01` al `15` y las de esta
+actividad del `16` al `28`; la captura `23` quedó en dos partes (rol permitido y rol no permitido).
 
 ### Parte 1 – migraciones, relaciones y joins (actividad anterior)
 
-- [captures/01_alembic_init.png](captures/01_alembic_init.png) - Inicialización de Alembic.
-- [captures/02_alembic_revision_autogenerate.png](captures/02_alembic_revision_autogenerate.png) - Generación de la migración.
-- [captures/03_alembic_upgrade_head.png](captures/03_alembic_upgrade_head.png) - Aplicación de la migración.
-- [captures/04_alembic_history.png](captures/04_alembic_history.png) - Historial de Alembic.
-- [captures/05_swagger_docs.png](captures/05_swagger_docs.png) - Swagger UI del proyecto.
-- [captures/06_redoc.png](captures/06_redoc.png) - Documentación ReDoc.
-- [captures/07_crear_usuario.png](captures/07_crear_usuario.png) - Creación de usuario.
-- [captures/08_crear_dispositivo.png](captures/08_crear_dispositivo.png) - Creación de dispositivo.
-- [captures/09_crear_prestamo.png](captures/09_crear_prestamo.png) - Creación de préstamo.
-- [captures/10_listar_prestamos_join.png](captures/10_listar_prestamos_join.png) - Consulta con joins.
-- [captures/11_filtro_estado.png](captures/11_filtro_estado.png) - Filtro por estado.
-- [captures/12_filtro_tipo_dispositivo.png](captures/12_filtro_tipo_dispositivo.png) - Filtro por tipo de dispositivo.
-- [captures/13_prestamos_usuario.png](captures/13_prestamos_usuario.png) - Historial de préstamos del usuario.
-- [captures/14_devolucion_dispositivo.png](captures/14_devolucion_dispositivo.png) - Devolución del préstamo.
-- [captures/15_dispositivo_disponible.png](captures/15_dispositivo_disponible.png) - Verificación de disponibilidad del dispositivo.
+**01 · Inicialización de Alembic** (`alembic init alembic`).
+
+![01 - Inicialización de Alembic](captures/01_alembic_init.png)
+
+**02 · Generación de la migración** (`alembic revision --autogenerate`).
+
+![02 - Generación de la migración](captures/02_alembic_revision_autogenerate.png)
+
+**03 · Aplicación de la migración** (`alembic upgrade head`).
+
+![03 - Aplicación de la migración](captures/03_alembic_upgrade_head.png)
+
+**04 · Historial de migraciones** (`alembic history`).
+
+![04 - Historial de Alembic](captures/04_alembic_history.png)
+
+**05 · Swagger UI del proyecto**.
+
+![05 - Swagger UI](captures/05_swagger_docs.png)
+
+**06 · Documentación ReDoc**.
+
+![06 - ReDoc](captures/06_redoc.png)
+
+**07 · Creación de usuario**.
+
+![07 - Creación de usuario](captures/07_crear_usuario.png)
+
+**08 · Creación de dispositivo**.
+
+![08 - Creación de dispositivo](captures/08_crear_dispositivo.png)
+
+**09 · Creación de préstamo**.
+
+![09 - Creación de préstamo](captures/09_crear_prestamo.png)
+
+**10 · Consulta de préstamos con joins**.
+
+![10 - Préstamos con joins](captures/10_listar_prestamos_join.png)
+
+**11 · Filtro de préstamos por estado**.
+
+![11 - Filtro por estado](captures/11_filtro_estado.png)
+
+**12 · Filtro por tipo de dispositivo**.
+
+![12 - Filtro por tipo de dispositivo](captures/12_filtro_tipo_dispositivo.png)
+
+**13 · Historial de préstamos del usuario**.
+
+![13 - Préstamos del usuario](captures/13_prestamos_usuario.png)
+
+**14 · Devolución del préstamo**.
+
+![14 - Devolución del dispositivo](captures/14_devolucion_dispositivo.png)
+
+**15 · Verificación de disponibilidad del dispositivo**.
+
+![15 - Dispositivo disponible](captures/15_dispositivo_disponible.png)
+
 
 ### Parte 2 – seguridad (esta actividad)
 
-| # | Archivo | Evidencia |
-| --- | --- | --- |
-| 16 | `16_estructura_proyecto.png` | Estructura de carpetas del proyecto con `app/auth`, `app/middlewares`, `app/dependencies` |
-| 17 | `17_alembic_upgrade_head_auth.png` | `python -m alembic upgrade head` aplicando `a2c51e9d043b` + `alembic current` |
-| 18 | `18_swagger_oauth2.png` | Swagger UI con el botón **Authorize** (OAuth2 password flow) y los tags Auth/Users/Devices/Loans/Security |
-| 19 | `19_register_usuario.png` | `POST /auth/register` con respuesta `201` |
-| 20 | `20_login_token.png` | `POST /auth/login` mostrando `access_token` y `token_type: bearer` |
-| 21 | `21_auth_me.png` | `GET /auth/me` con el token en `Authorization: Bearer` |
-| 22 | `22_acceso_sin_token.png` | Ruta protegida sin token → `401 Unauthorized` |
-| 23 | `23_acceso_rol_no_permitido.png` | Usuario con rol `user` intentando `DELETE /devices/{id}` → `403 Forbidden` |
-| 24 | `24_middleware_headers.png` | Cabeceras `X-App-Name`, `X-Process-Time`, `X-Request-ID` en la respuesta |
-| 25 | `25_rate_limiting_429.png` | Varias llamadas a `/auth/login` y la última con `429 Too Many Requests` |
-| 26 | `26_hash_en_base_de_datos.png` | Contenido de `users.hashed_password` mostrando el hash (nunca texto plano) |
-| 27 | `27_cors_preflight.png` | Petición `OPTIONS` con `Origin: http://localhost:5173` y cabeceras `Access-Control-Allow-*` |
-| 28 | `28_pruebas_pytest.png` | Salida de `pytest -q` con todas las pruebas en verde |
+**16 · Estructura del proyecto** — `app/` con `auth`, `docs`, `errors`, `middlewares`, `dependencies`, `models`, `routes`, `schemas` y `services`.
+
+![16 - Estructura del proyecto](captures/16_estructura_proyecto.png)
+
+**17 · Migración de autenticación aplicada** — `alembic upgrade head` y `alembic current` en `a2c51e9d043b (head)`.
+
+![17 - Migración aplicada](captures/17_alembic_upgrade_head_auth.png)
+
+**18 · Swagger/OpenAPI con OAuth2** — botón **Authorize** con el flujo *password* y los cinco tags.
+
+![18 - Swagger con OAuth2](captures/18_swagger_oauth2.png)
+
+**19 · Registro de usuario** — `POST /auth/register` respondiendo `201` sin exponer `hashed_password`.
+
+![19 - Registro de usuario](captures/19_register_usuario.png)
+
+**20 · Login y token generado** — `POST /auth/login` con `access_token` y `token_type: bearer`.
+
+![20 - Login y token](captures/20_login_token.png)
+
+**21 · Usuario autenticado** — `GET /auth/me` con el token en `Authorization: Bearer`.
+
+![21 - Consulta de /auth/me](captures/21_auth_me.png)
+
+**22 · Acceso a ruta protegida sin token** — `GET /users` respondiendo `401 Unauthorized`.
+
+![22 - Acceso sin token](captures/22_acceso_sin_token.png)
+
+**23 · Rol permitido: creación de dispositivo** — `POST /devices` con rol `admin` respondiendo `201 Created`.
+
+![23 - Dispositivo creado con rol permitido](captures/23_acceso_rol_no_permitido_1.png)
+
+**23 · Rol no permitido: eliminación de dispositivo** — `DELETE /devices/1` con rol `user` respondiendo `403 Forbidden`.
+
+![23 - Acceso con rol no permitido](captures/23_acceso_rol_no_permitido_2.png)
+
+**24 · Cabeceras del middleware** — `X-App-Name`, `X-Process-Time`, `X-Request-ID` y cabeceras de seguridad.
+
+![24 - Cabeceras del middleware](captures/24_middleware_headers.png)
+
+**25 · Rate limiting** — varias llamadas a `/auth/login` y la última con `429 Too Many Requests`.
+
+![25 - Rate limiting 429](captures/25_rate_limiting_429.png)
+
+**26 · Hash de contraseñas en la base de datos** — valores `$bcrypt-sha256$...`, nunca texto plano.
+
+![26 - Hash en la base de datos](captures/26_hash_en_base_de_datos.png)
+
+**27 · Configuración CORS** — preflight `OPTIONS` con `Origin: http://localhost:5173` y `Access-Control-Allow-*`.
+
+![27 - Verificación de CORS](captures/27_cors_preflight.png)
+
+**28 · Pruebas automatizadas** — `pytest -q` con las 17 pruebas en verde.
+
+![28 - Pruebas en verde](captures/28_pruebas_pytest.png)
+
 
 
 ### Cómo preparar el entorno para las capturas
